@@ -21,31 +21,31 @@
 
     <div class="bc-grid">
 
-      <a class="bc-card" href="/brandcenter/firma/">
+      <a class="bc-card" id="linkFirma" href="/firma/">
         <span>01</span>
         <h3>Firma de correo</h3>
         <p>Genera una firma HTML con datos del usuario, banner y marca seleccionada.</p>
       </a>
 
-      <a class="bc-card" href="/brandcenter/sales-sheet/">
+      <a class="bc-card" id="linkSalesSheet" href="/sales-sheet/">
         <span>02</span>
         <h3>Sales Sheet</h3>
         <p>Crea una ficha comercial en PDF para enviar a prospectos.</p>
       </a>
 
-      <a class="bc-card" href="/brandcenter/presentacion/">
+      <a class="bc-card" id="linkPresentacion" href="/presentacion/">
         <span>03</span>
         <h3>Presentación comercial</h3>
         <p>Genera una presentación base por marca, servicio o tipo de prospecto.</p>
       </a>
 
-      <a class="bc-card" href="/brandcenter/perfil/">
+      <a class="bc-card" id="linkPerfil" href="/perfil/">
         <span>04</span>
         <h3>Perfil Google / redes</h3>
         <p>Crea iconos y versiones optimizadas para perfiles digitales.</p>
       </a>
 
-      <a class="bc-card" href="/brandcenter/banner/">
+      <a class="bc-card" id="linkBanner" href="/banner/">
         <span>05</span>
         <h3>Banners</h3>
         <p>Genera banners comerciales para campañas, correo o comunicación interna.</p>
@@ -196,3 +196,37 @@
   }
 }
 </style>
+
+<script>
+  const brandSelect = document.getElementById("brandSelect");
+
+  const links = {
+    firma: document.getElementById("linkFirma"),
+    salesSheet: document.getElementById("linkSalesSheet"),
+    presentacion: document.getElementById("linkPresentacion"),
+    perfil: document.getElementById("linkPerfil"),
+    banner: document.getElementById("linkBanner")
+  };
+
+  const savedBrand = localStorage.getItem("selectedBrand");
+
+  if (savedBrand) {
+    brandSelect.value = savedBrand;
+  }
+
+  function updateLinks() {
+    const brand = brandSelect.value || "amitai";
+
+    localStorage.setItem("selectedBrand", brand);
+
+    links.firma.href = `/firma/?brand=${brand}`;
+    links.salesSheet.href = `/sales-sheet/?brand=${brand}`;
+    links.presentacion.href = `/presentacion/?brand=${brand}`;
+    links.perfil.href = `/perfil/?brand=${brand}`;
+    links.banner.href = `/banner/?brand=${brand}`;
+  }
+
+  brandSelect.addEventListener("change", updateLinks);
+
+  updateLinks();
+</script>
