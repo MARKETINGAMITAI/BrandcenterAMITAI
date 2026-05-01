@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generador de Presentación | Brand Center AMITAI</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: linear-gradient(135deg, #003f7f 0%, #006fb8 45%, #eaf6fb 100%);
+      color: #ffffff;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 60px 5%;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    .top-link {
+      display: inline-block;
+      margin-bottom: 26px;
+      color: rgba(255,255,255,.86);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .header {
+      max-width: 840px;
+      margin-bottom: 38px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .header h1 {
+      margin: 0 0 18px;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .header p {
+      margin: 0;
+      max-width: 720px;
+      font-size: 18px;
+      line-height: 1.6;
+      color: rgba(255,255,255,.82);
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(255,255,255,.94);
+      color: #1f2933;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 24px 70px rgba(0,0,0,.16);
+      position: sticky;
+      top: 24px;
+    }
+
+    .panel h2 {
+      margin: 0 0 22px;
+      color: #003f7f;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #003f7f;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      margin-bottom: 16px;
+      padding: 14px 15px;
+      border: 1px solid #d6dde6;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 15px;
+      color: #1f2933;
+      background: #ffffff;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #006fb8;
+      box-shadow: 0 0 0 4px rgba(0,111,184,.12);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 15px 18px;
+      font-family: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    .primary {
+      background: #003f7f;
+      color: #ffffff;
+      box-shadow: 0 14px 28px rgba(0,63,127,.22);
+    }
+
+    .secondary {
+      background: #eaf3fb;
+      color: #003f7f;
+    }
+
+    .preview-wrap {
+      padding: 24px;
+      border-radius: 28px;
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.22);
+      overflow-x: auto;
+    }
+
+    .deck {
+      display: grid;
+      gap: 24px;
+      justify-content: center;
+    }
+
+    .slide {
+      width: 960px;
+      height: 540px;
+      background: #ffffff;
+      color: #1f2933;
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 24px 70px rgba(0,0,0,.18);
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(0,63,127,.06), transparent 45%),
+        radial-gradient(circle at 15% 80%, rgba(0,111,184,.08), transparent 28%);
+      pointer-events: none;
+    }
+
+    .slide-logo {
+      position: absolute;
+      top: 26px;
+      left: 34px;
+      width: 130px;
+      background: #ffffff;
+      padding: 8px 10px;
+      border-radius: 14px;
+      z-index: 3;
+    }
+
+    .corner-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 280px;
+      height: 92px;
+      background: #ffffff;
+      clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
+      z-index: 2;
+      box-shadow: 0 12px 24px rgba(0,0,0,.12);
+    }
+
+    .accent-bar {
+      position: absolute;
+      right: 110px;
+      top: -80px;
+      width: 34px;
+      height: 720px;
+      background: #f1d400;
+      transform: rotate(12deg);
+      z-index: 1;
+    }
+
+    .slide-title-area {
+      position: absolute;
+      left: 54px;
+      bottom: 62px;
+      max-width: 560px;
+      z-index: 3;
+      color: #ffffff;
+    }
+
+    .slide-title-area h1 {
+      margin: 0 0 16px;
+      font-size: 54px;
+      line-height: 1;
+      font-weight: 850;
+    }
+
+    .slide-title-area p {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.5;
+      opacity: .9;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #003f7f 0%, #006fb8 80%);
+    }
+
+    .hero-shape {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, rgba(0,63,127,.96) 0%, rgba(0,111,184,.9) 48%, rgba(234,246,251,.38) 49%, rgba(234,246,251,.15) 100%);
+      z-index: 0;
+    }
+
+    .content-slide {
+      padding: 92px 64px 54px;
+    }
+
+    .content-slide h2 {
+      margin: 0 0 22px;
+      color: #003f7f;
+      font-size: 42px;
+      line-height: 1.05;
+    }
+
+    .content-slide p {
+      margin: 0;
+      max-width: 680px;
+      font-size: 20px;
+      line-height: 1.55;
+      color: #5d6670;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+      height: 100%;
+    }
+
+    .stat-card {
+      background: #f3f8fc;
+      border-left: 7px solid #f1d400;
+      padding: 28px;
+      border-radius: 22px;
+    }
+
+    .stat-card strong {
+      display: block;
+      color: #003f7f;
+      font-size: 44px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .stat-card span {
+      color: #5d6670;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .bullets {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .bullet {
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      gap: 14px;
+      align-items: start;
+      font-size: 18px;
+      line-height: 1.45;
+      color: #3f4953;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: #006fb8;
+      margin-top: 6px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .mini-card {
+      padding: 22px;
+      border-radius: 22px;
+      background: #f7f9fb;
+      border: 1px solid #e3e8ee;
+      min-height: 145px;
+    }
+
+    .mini-card strong {
+      display: block;
+      color: #003f7f;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .mini-card span {
+      color: #5d6670;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .process {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .step {
+      padding: 20px;
+      border-radius: 20px;
+      background: #f3f8fc;
+      border-bottom: 6px solid #006fb8;
+      min-height: 150px;
+    }
+
+    .step b {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: #003f7f;
+      color: #ffffff;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .step strong {
+      display: block;
+      color: #003f7f;
+      margin-bottom: 8px;
+    }
+
+    .step span {
+      display: block;
+      color: #5d6670;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .contact-slide {
+      background: linear-gradient(135deg, #003f7f 0%, #006fb8 70%);
+      color: #ffffff;
+      padding: 70px 64px;
+    }
+
+    .contact-slide h2 {
+      margin: 0 0 24px;
+      font-size: 48px;
+      line-height: 1;
+    }
+
+    .contact-box {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      align-items: center;
+      position: relative;
+      z-index: 3;
+    }
+
+    .contact-card {
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 24px;
+      padding: 26px;
+      line-height: 1.7;
+    }
+
+    .contact-card strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%);
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: #003f7f;
+      color: #ffffff;
+      font-weight: 800;
+      box-shadow: 0 18px 40px rgba(0,0,0,.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-6px);
+    }
+
+    @media (max-width: 1100px) {
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 48px 5%;
+      }
+
+      .button-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .top-link,
+      .header,
+      .panel,
+      .toast {
+        display: none !important;
+      }
+
+      .page {
+        padding: 0;
+      }
+
+      .container {
+        max-width: none;
+      }
+
+      .app-grid {
+        display: block;
+      }
+
+      .preview-wrap {
+        padding: 0;
+        background: #ffffff;
+        border: none;
+        overflow: visible;
+      }
+
+      .deck {
+        display: block;
+      }
+
+      .slide {
+        width: 100vw;
+        height: 56.25vw;
+        max-height: 100vh;
+        page-break-after: always;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="container">
+
+      <a href="/" class="top-link">← Volver al Brand Center</a>
+
+      <header class="header">
+        <span class="eyebrow">Brand Center</span>
+        <h1>Generador de presentación</h1>
+        <p>
+          Crea una presentación comercial por servicio, solución o suite completa,
+          con datos personalizados y lista para exportar en PDF.
+        </p>
+      </header>
+
+      <div class="app-grid">
+
+        <aside class="panel">
+          <h2>Configurar presentación</h2>
+
+          <label>Tipo de presentación</label>
+          <select id="deckType" onchange="updateDeck()">
+            <option value="suite">Suite completa</option>
+            <option value="honestidad">AMITAI Honestidad</option>
+            <option value="integriline">Integri-Line</option>
+            <option value="background">Background Check</option>
+          </select>
+
+          <label>Nivel de profundidad</label>
+          <select id="depth" onchange="updateDeck()">
+            <option value="express">Express / 5 slides</option>
+            <option value="comercial" selected>Comercial / 8 slides</option>
+            <option value="completa">Completa / 10 slides</option>
+          </select>
+
+          <label>Empresa prospecto</label>
+          <input id="prospect" value="Empresa prospecto" oninput="updateDeck()" />
+
+          <label>Mensaje de apertura</label>
+          <textarea id="openingMessage" oninput="updateDeck()">Le compartimos una propuesta comercial enfocada en fortalecer sus procesos de ética, cumplimiento y prevención de riesgos.</textarea>
+
+          <label>Nombre del comercial</label>
+          <input id="sellerName" value="Juan Palao García" oninput="updateDeck()" />
+
+          <label>Puesto</label>
+          <input id="sellerPosition" value="Gerente de Marketing" oninput="updateDeck()" />
+
+          <label>Correo</label>
+          <input id="sellerEmail" value="juan.palao@amitai.com" oninput="updateDeck()" />
+
+          <label>Teléfono</label>
+          <input id="sellerPhone" value="+52 55 0000 0000" oninput="updateDeck()" />
+
+          <div class="button-row">
+            <button class="primary" onclick="window.print()">Exportar PDF</button>
+            <button class="secondary" onclick="copyDeckLink()">Copiar link</button>
+          </div>
+        </aside>
+
+        <section class="preview-wrap">
+          <div class="deck" id="deck"></div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast">Listo</div>
+
+  <script>
+    const logoUrl = "https://amitaisignaturegenerator.netlify.app/media/logo-amitai.png";
+
+    const decks = {
+      suite: {
+        title: "Suite AMITAI® 2026",
+        label: "Solución integral",
+        color1: "#003f7f",
+        color2: "#006fb8",
+        accent: "#f1d400",
+        subtitle: "Soluciones para fortalecer ética, cumplimiento, selección y prevención de riesgos.",
+        what: "Proveemos soluciones tecnológicas y servicios alineados a mejores prácticas internacionales para programas de Integridad, Ética y Cumplimiento.",
+        solution: "Un ecosistema comercial que integra evaluación, denuncia, diagnóstico, capacitación y verificación.",
+        benefits: [
+          ["Ecosistema integral", "Herramientas para distintas etapas del riesgo organizacional."],
+          ["Más de 25 años", "Experiencia impulsando cultura ética en empresas de América."],
+          ["+5,000 compañías", "Modelo utilizado en organizaciones de distintos sectores."],
+          ["Tecnología y cumplimiento", "Soluciones seguras, configurables y orientadas a resultados."]
+        ],
+        process: [
+          ["Diagnóstico", "Identificamos necesidades y riesgos principales."],
+          ["Selección", "Se define la solución o combinación adecuada."],
+          ["Implementación", "Configuramos herramientas y usuarios."],
+          ["Seguimiento", "Acompañamos con reportes y mejora continua."]
+        ],
+        differentiators: [
+          "Suite completa para cultura ética organizacional.",
+          "Herramientas tecnológicas y servicios especializados.",
+          "Experiencia en Latinoamérica.",
+          "Enfoque en prevención, control y cumplimiento."
+        ]
+      },
+
+      honestidad: {
+        title: "AMITAI Honestidad",
+        label: "Pre-employment screening",
+        color1: "#0E3C66",
+        color2: "#2078bd",
+        accent: "#f1d400",
+        subtitle: "Evaluación para conocer tendencias conductuales vinculadas con honestidad y cumplimiento.",
+        what: "Permite conocer de manera confiable tendencias de candidatos o colaboradores a involucrarse en actos deshonestos, así como su comportamiento frente a normas, políticas, trabajo en equipo y autoridad.",
+        solution: "Una evaluación psicométrica robusta para apoyar decisiones de selección, seguimiento y prevención de riesgos.",
+        benefits: [
+          ["Reduce riesgos de contratación", "Identifica tendencias relevantes antes de incorporar talento."],
+          ["Resultados inmediatos", "Información rápida y accionable para RH y dirección."],
+          ["True Identity", "Verificación de identidad y análisis apoyado con inteligencia artificial."],
+          ["Reportes claros", "Resultados cuantitativos, notas interpretativas y guía de entrevista."]
+        ],
+        process: [
+          ["Invitación", "El candidato recibe acceso a la evaluación."],
+          ["Aplicación", "La prueba se adapta a la velocidad de lectura del evaluado."],
+          ["Análisis", "El sistema detecta manipulación y correlaciona dimensiones."],
+          ["Reporte", "Se entrega un resultado ejecutivo para toma de decisiones."]
+        ],
+        differentiators: [
+          "Único normado en cada país donde se aplica.",
+          "Detecta varios tipos de manipulación.",
+          "Disponible en web 24/365.",
+          "Soporte y actualizaciones permanentes."
+        ]
+      },
+
+      integriline: {
+        title: "Integri-Line",
+        label: "Línea de denuncia",
+        color1: "#5b245c",
+        color2: "#812a80",
+        accent: "#f1d400",
+        subtitle: "Sistema seguro y configurable para la recepción y gestión de denuncias.",
+        what: "Es un sistema para la recepción y gestión de denuncias, totalmente seguro y adaptable a las necesidades de la organización.",
+        solution: "Una plataforma para recibir, documentar, gestionar y dar seguimiento a reportes internos con confidencialidad y trazabilidad.",
+        benefits: [
+          ["Gestión estructurada", "Documenta y guarda evidencia de cada caso de manera segura."],
+          ["Flexible", "Configurable según necesidades, áreas y permisos."],
+          ["Canales disponibles", "Permite múltiples vías de denuncia y seguimiento."],
+          ["Mejores prácticas", "Alineado a principios de confianza, imparcialidad y protección."]
+        ],
+        process: [
+          ["Configuración", "El administrador recibe accesos e instrucciones."],
+          ["Difusión", "La organización comparte el código único o QR de acceso."],
+          ["Recepción", "Los denunciantes reportan de forma segura."],
+          ["Gestión", "Responsables dan seguimiento hasta cierre del caso."]
+        ],
+        differentiators: [
+          "Software seguro 24/365.",
+          "Línea de ayuda disponible.",
+          "Capacitación para administradores.",
+          "Apoyo consultivo en gestión de denuncias."
+        ]
+      },
+
+      background: {
+        title: "Background Check",
+        label: "Validación de antecedentes",
+        color1: "#741d1b",
+        color2: "#AF1E35",
+        accent: "#f1d400",
+        subtitle: "Reporte automatizado para verificar antecedentes de candidatos de forma segura.",
+        what: "Es un reporte que, con consentimiento de la persona, proporciona datos socioeconómicos, laborales y penales en línea.",
+        solution: "Una herramienta para complementar procesos de contratación o promoción mediante validación rápida y automatizada.",
+        benefits: [
+          ["Obtención rápida", "El reporte se obtiene en un par de minutos."],
+          ["Verificación segura", "Aporta información relevante con consentimiento."],
+          ["Mejor decisión", "Ayuda a reducir riesgos en contratación o promoción."],
+          ["Resumen claro", "Entrega un resumen de riesgos concreto y fácil de comprender."]
+        ],
+        process: [
+          ["Consentimiento", "La persona autoriza la consulta."],
+          ["Datos requeridos", "Se proporciona CURP y RFC."],
+          ["Validación", "Se consulta información disponible."],
+          ["Reporte", "Se entrega resumen para toma de decisión."]
+        ],
+        differentiators: [
+          "Información laboral, penal y socioeconómica.",
+          "Proceso automatizado.",
+          "Útil para empresas públicas y privadas.",
+          "Recomendación de contratación y resumen de riesgos."
+        ]
+      }
+    };
+
+    function slideCover(config, prospect, openingMessage) {
+      return `
+        <article class="slide">
+          <div class="hero-bg" style="background:linear-gradient(135deg, ${config.color1} 0%, ${config.color2} 80%);"></div>
+          <div class="hero-shape"></div>
+          <div class="accent-bar" style="background:${config.accent};"></div>
+          <div class="corner-label"></div>
+          <img class="slide-logo" src="${logoUrl}" alt="AMITAI">
+          <div class="slide-title-area">
+            <div class="eyebrow">${config.label}</div>
+            <h1>${config.title}</h1>
+            <p>${openingMessage}<br><br><strong>${prospect}</strong></p>
+          </div>
+        </article>
+      `;
+    }
+
+    function slideWho(config) {
+      return `
+        <article class="slide content-slide">
+          <img class="slide-logo" src="${logoUrl}" alt="AMITAI">
+          <div class="two-col">
+            <div>
+              <h2>¿Quiénes somos?</h2>
+              <p>Por más de 25 años, AMITAI® ha impulsado la cultura ética organizacional en empresas de América.</p>
+              <div class="bullets">
+                <div class="bullet"><span class="dot" style="background:${config.color2};"></span><span>Experiencia regional en ética, cumplimiento y prevención de riesgos.</span></div>
+                <div class="bullet"><span class="dot" style="background:${config.color2};"></span><span>Modelo integral de soluciones y servicios para organizaciones.</span></div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <strong>25+</strong>
+              <span>años impulsando cultura ética organizacional.</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function slideWhat(config) {
+      return `
+        <article class="slide content-slide">
+          <img class="slide-logo" src="${logoUrl}" alt="AMITAI">
+          <h2>¿Qué hacemos?</h2>
+          <p>${config.what}</p>
+          <div class="cards">
+            <div class="mini-card"><strong>Prevención</strong><span>Detectamos riesgos antes de que impacten a la organización.</span></div>
+            <div class="mini-card"><strong>Gestión</strong><span>Facilitamos procesos estructurados, medibles y documentados.</span></div>
+            <div class="mini-card"><strong>Cumplimiento</strong><span>Apoyamos programas de ética e integridad corporativa.</span></div>
+          </div>
+        </article>
+      `;
+    }
+
+    function slideSolution(config) {
+      return `
+        <article class="slide content-slide">
+          <img class="slide-logo" src="${logoUrl}" alt="AMITAI">
+          <h2>${config.title}</h2>
+          <p>${config.solution}</p>
+          <div class="stat-card" style="margin-top:28px; border-left-color:${config.accent};">
+            <strong style="font-size:34px;">${config.label}</strong>
+            <span>${config.subtitle}</span>
+          </div>
+        </article>
+      `;
+    }
+
+    function slideBenefits(config) {
+      return `
+        <article class="slide content-slide">
+          <img class="slide-logo" src="${logoUrl}" alt="AMITAI">
+          <h2>Beneficios clave</h2>
+          <div class="cards">
+            ${config.benefits.map(item => `
+              <div class="mini-card">
+                <strong>${item[0]}</strong>
+                <span>${item[1]}</span>
+              </div>
+            `).join("")}
+          </div>
+        </article>
+      `;
+    }
+
+    function slideProcess(config) {
+      return `
+        <article class="slide content-slide">
+          <img class="slide-logo" src="${logoUrl}" alt="AMITAI">
+          <h2>Funcionamiento</h2>
+          <p>Una ruta clara para implementar, operar y dar seguimiento a la solución.</p>
+          <div class="process">
+            ${config.process.map((item, index) => `
+              <div class="step" style="border-bottom-color:${config.color2};">
+                <b style="background:${config.color1};">${index + 1}</b>
+                <strong>${item[0]}</strong>
+                <span>${item[1]}</span>
+              </div>
+            `).join("")}
+          </div>
+        </article>
+      `;
+    }
+
+    function slideDifferentiators(config) {
+      return `
+        <article class="slide content-slide">
+          <img class="slide-logo" src="${logoUrl}" alt="AMITAI">
+          <h2>¿Por qué nosotros?</h2>
+          <div class="bullets">
+            ${config.differentiators.map(item => `
+              <div class="bullet">
+                <span class="dot" style="background:${config.color2};"></span>
+                <span>${item}</span>
+              </div>
+            `).join("")}
+          </div>
+        </article>
+      `;
+    }
+
+    function slideContact(config, sellerName, sellerPosition, sellerEmail, sellerPhone, prospect) {
+      return `
+        <article class="slide contact-slide" style="background:linear-gradient(135deg, ${config.color1} 0%, ${config.color2} 80%);">
+          <div class="accent-bar" style="background:${config.accent};"></div>
+          <img class="slide-logo" src="${logoUrl}" alt="AMITAI">
+          <div class="contact-box">
+            <div>
+              <h2>Contacto</h2>
+              <p style="font-size:20px;line-height:1.55;max-width:540px;">
+                Estamos listos para revisar el caso de <strong>${prospect}</strong>
+                y proponer una ruta de implementación.
+              </p>
+            </div>
+            <div class="contact-card">
+              <strong>${sellerName}</strong>
+              ${sellerPosition}<br>
+              ${sellerEmail}<br>
+              ${sellerPhone}<br><br>
+              www.amitai.com
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function updateDeck() {
+      const type = document.getElementById("deckType").value;
+      const depth = document.getElementById("depth").value;
+      const prospect = document.getElementById("prospect").value;
+      const openingMessage = document.getElementById("openingMessage").value;
+
+      const sellerName = document.getElementById("sellerName").value;
+      const sellerPosition = document.getElementById("sellerPosition").value;
+      const sellerEmail = document.getElementById("sellerEmail").value;
+      const sellerPhone = document.getElementById("sellerPhone").value;
+
+      const config = decks[type];
+
+      let slides = [
+        slideCover(config, prospect, openingMessage),
+        slideWho(config),
+        slideWhat(config),
+        slideSolution(config),
+        slideBenefits(config)
+      ];
+
+      if (depth === "comercial" || depth === "completa") {
+        slides.push(slideProcess(config));
+        slides.push(slideDifferentiators(config));
+      }
+
+      if (depth === "completa") {
+        slides.splice(4, 0, slideSolution(config));
+        slides.push(slideBenefits(config));
+      }
+
+      slides.push(slideContact(config, sellerName, sellerPosition, sellerEmail, sellerPhone, prospect));
+
+      document.getElementById("deck").innerHTML = slides.join("");
+      saveDeckData();
+    }
+
+    function saveDeckData() {
+      const data = {
+        deckType: document.getElementById("deckType").value,
+        depth: document.getElementById("depth").value,
+        prospect: document.getElementById("prospect").value,
+        openingMessage: document.getElementById("openingMessage").value,
+        sellerName: document.getElementById("sellerName").value,
+        sellerPosition: document.getElementById("sellerPosition").value,
+        sellerEmail: document.getElementById("sellerEmail").value,
+        sellerPhone: document.getElementById("sellerPhone").value
+      };
+
+      localStorage.setItem("presentationData", JSON.stringify(data));
+    }
+
+    function loadDeckData() {
+      const saved = localStorage.getItem("presentationData");
+      const params = new URLSearchParams(window.location.search);
+
+      if (saved) {
+        const data = JSON.parse(saved);
+        Object.keys(data).forEach(key => {
+          const field = document.getElementById(key);
+          if (field) field.value = data[key];
+        });
+      }
+
+      if (params.get("brand")) {
+        localStorage.setItem("selectedBrand", params.get("brand"));
+      }
+
+      updateDeck();
+    }
+
+    function copyDeckLink() {
+      const type = document.getElementById("deckType").value;
+      const depth = document.getElementById("depth").value;
+
+      const url = `${window.location.origin}${window.location.pathname}?type=${type}&depth=${depth}`;
+
+      navigator.clipboard.writeText(url);
+      showToast("Link copiado");
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1800);
+    }
+
+    loadDeckData();
+  </script>
+</body>
+</html>
