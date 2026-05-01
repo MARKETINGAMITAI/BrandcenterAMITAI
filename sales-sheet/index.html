@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sales Sheet | Brand Center AMITAI</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: linear-gradient(135deg, #003f7f 0%, #006fb8 45%, #eaf6fb 100%);
+      color: #ffffff;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 60px 5%;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .top-link {
+      display: inline-block;
+      margin-bottom: 26px;
+      color: rgba(255,255,255,.86);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .header {
+      max-width: 820px;
+      margin-bottom: 38px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .header h1 {
+      margin: 0 0 18px;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .header p {
+      margin: 0;
+      max-width: 720px;
+      font-size: 18px;
+      line-height: 1.6;
+      color: rgba(255,255,255,.82);
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(255,255,255,.94);
+      color: #1f2933;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 24px 70px rgba(0,0,0,.16);
+    }
+
+    .panel h2 {
+      margin: 0 0 22px;
+      color: #003f7f;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #003f7f;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      margin-bottom: 16px;
+      padding: 14px 15px;
+      border: 1px solid #d6dde6;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 15px;
+      color: #1f2933;
+      background: #ffffff;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 86px;
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #006fb8;
+      box-shadow: 0 0 0 4px rgba(0,111,184,.12);
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .mode-btn {
+      border: 1px solid #d6dde6;
+      background: #fff;
+      color: #003f7f;
+      padding: 13px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .mode-btn.active {
+      background: #003f7f;
+      color: #fff;
+      border-color: #003f7f;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 15px 18px;
+      font-family: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    .primary {
+      background: #003f7f;
+      color: #ffffff;
+      box-shadow: 0 14px 28px rgba(0,63,127,.22);
+    }
+
+    .secondary {
+      background: #eaf3fb;
+      color: #003f7f;
+    }
+
+    .sheet-wrap {
+      overflow: auto;
+      padding: 24px;
+      border-radius: 28px;
+      background: rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.22);
+    }
+
+    .sales-sheet {
+      width: 816px;
+      min-height: 1056px;
+      margin: 0 auto;
+      background: #ffffff;
+      color: #1f2933;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(0,0,0,.18);
+    }
+
+    .sheet-hero {
+      padding: 38px 42px;
+      color: #fff;
+      background: linear-gradient(135deg, #003f7f 0%, #006fb8 70%);
+      position: relative;
+    }
+
+    .sheet-hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.14);
+    }
+
+    .sheet-logo {
+      width: 130px;
+      height: auto;
+      margin-bottom: 32px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 14px;
+    }
+
+    .sheet-kicker {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity: .84;
+      margin-bottom: 12px;
+    }
+
+    .sheet-title {
+      margin: 0 0 14px;
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 850;
+      max-width: 620px;
+    }
+
+    .sheet-subtitle {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.55;
+      max-width: 610px;
+      opacity: .9;
+    }
+
+    .sheet-body {
+      padding: 38px 42px;
+    }
+
+    .intro-box {
+      padding: 22px;
+      border-radius: 20px;
+      background: #f3f8fc;
+      border-left: 6px solid #f1d400;
+      margin-bottom: 28px;
+    }
+
+    .intro-box p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #3f4953;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      color: #003f7f;
+      font-size: 22px;
+    }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .benefit {
+      padding: 18px;
+      border-radius: 18px;
+      background: #f7f9fb;
+      border: 1px solid #e3e8ee;
+    }
+
+    .benefit strong {
+      display: block;
+      color: #003f7f;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .benefit span {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #5d6670;
+    }
+
+    .services-list {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .service-item {
+      display: grid;
+      grid-template-columns: 12px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f7f9fb;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: #006fb8;
+      margin-top: 5px;
+    }
+
+    .service-item h4 {
+      margin: 0 0 4px;
+      color: #003f7f;
+      font-size: 16px;
+    }
+
+    .service-item p {
+      margin: 0;
+      color: #5d6670;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .cta {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 20px;
+      padding: 22px;
+      border-radius: 22px;
+      background: #003f7f;
+      color: #ffffff;
+      align-items: center;
+    }
+
+    .cta h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .cta p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      opacity: .88;
+    }
+
+    .contact-card {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .contact-card strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .legal {
+      padding: 16px 42px 28px;
+      font-size: 10px;
+      color: #818084;
+      line-height: 1.4;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%);
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: #003f7f;
+      color: #ffffff;
+      font-weight: 800;
+      box-shadow: 0 18px 40px rgba(0,0,0,.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-6px);
+    }
+
+    @media (max-width: 1050px) {
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sheet-wrap {
+        overflow-x: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 48px 5%;
+      }
+
+      .button-row,
+      .mode-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .top-link,
+      .header,
+      .panel,
+      .toast {
+        display: none !important;
+      }
+
+      .page {
+        padding: 0;
+      }
+
+      .container {
+        max-width: none;
+      }
+
+      .app-grid {
+        display: block;
+      }
+
+      .sheet-wrap {
+        padding: 0;
+        border: none;
+        background: #fff;
+        overflow: visible;
+      }
+
+      .sales-sheet {
+        width: 100%;
+        min-height: auto;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="container">
+
+      <a href="/" class="top-link">← Volver al Brand Center</a>
+
+      <header class="header">
+        <span class="eyebrow">Brand Center</span>
+        <h1>Generador de Sales Sheet</h1>
+        <p>
+          Crea una ficha comercial personalizada por servicio o por solución,
+          lista para enviar a prospectos.
+        </p>
+      </header>
+
+      <div class="app-grid">
+
+        <aside class="panel">
+          <h2>Configurar pieza</h2>
+
+          <label>Tipo de sales sheet</label>
+          <div class="mode-grid">
+            <button class="mode-btn active" id="btnService" type="button" onclick="setMode('service')">Por servicio</button>
+            <button class="mode-btn" id="btnSolution" type="button" onclick="setMode('solution')">Por solución</button>
+          </div>
+
+          <div id="serviceField">
+            <label>Servicio</label>
+            <select id="serviceSelect" onchange="updateSheet()">
+              <option value="honestidad">AMITAI Honestidad</option>
+              <option value="integriline">Integri-Line</option>
+              <option value="background">Background Check</option>
+              <option value="esurvey">E-Survey</option>
+              <option value="ethics">E-thics Learning</option>
+              <option value="perfiles">Perfiles</option>
+            </select>
+          </div>
+
+          <div id="solutionField" style="display:none;">
+            <label>Solución combinada</label>
+            <select id="solutionSelect" onchange="updateSheet()">
+              <option value="prescreening">Pre-employment Screening</option>
+              <option value="compliance">Cultura ética y cumplimiento</option>
+              <option value="suite">Suite AMITAI completa</option>
+            </select>
+          </div>
+
+          <label>Nombre del prospecto / empresa</label>
+          <input id="prospect" value="Empresa prospecto" oninput="updateSheet()" />
+
+          <label>Objetivo comercial</label>
+          <select id="objective" onchange="updateSheet()">
+            <option value="primer">Primer contacto</option>
+            <option value="seguimiento">Seguimiento</option>
+            <option value="cierre">Cierre / propuesta</option>
+          </select>
+
+          <label>Mensaje personalizado</label>
+          <textarea id="customMessage" oninput="updateSheet()">Le comparto una solución pensada para fortalecer sus procesos de prevención, ética y cumplimiento.</textarea>
+
+          <label>Nombre del comercial</label>
+          <input id="sellerName" value="Juan Palao García" oninput="updateSheet()" />
+
+          <label>Puesto</label>
+          <input id="sellerPosition" value="Gerente de Marketing" oninput="updateSheet()" />
+
+          <label>Correo</label>
+          <input id="sellerEmail" value="juan.palao@amitai.com" oninput="updateSheet()" />
+
+          <label>Teléfono</label>
+          <input id="sellerPhone" value="+52 55 0000 0000" oninput="updateSheet()" />
+
+          <div class="button-row">
+            <button class="primary" onclick="printPDF()">Exportar PDF</button>
+            <button class="secondary" onclick="copyLink()">Copiar link</button>
+          </div>
+        </aside>
+
+        <section class="sheet-wrap">
+          <article class="sales-sheet" id="salesSheet">
+
+            <div class="sheet-hero" id="sheetHero">
+              <img class="sheet-logo" id="logo" src="https://amitaisignaturegenerator.netlify.app/media/logo-amitai.png" alt="AMITAI" />
+
+              <div class="sheet-kicker" id="kicker">Sales Sheet Comercial</div>
+              <h1 class="sheet-title" id="sheetTitle">AMITAI Honestidad</h1>
+              <p class="sheet-subtitle" id="sheetSubtitle">
+                Evaluación para identificar tendencias de riesgo y fortalecer procesos de selección.
+              </p>
+            </div>
+
+            <div class="sheet-body">
+
+              <div class="intro-box">
+                <p id="introText"></p>
+              </div>
+
+              <h2 class="section-title">Beneficios clave</h2>
+              <div class="benefits" id="benefits"></div>
+
+              <h2 class="section-title">Solución incluida</h2>
+              <div class="services-list" id="servicesList"></div>
+
+              <div class="cta">
+                <div>
+                  <h3>Estamos listos para apoyar a tu empresa</h3>
+                  <p id="ctaText">
+                    Agenda una conversación para revisar necesidades, alcance y próximos pasos.
+                  </p>
+                </div>
+
+                <div class="contact-card">
+                  <strong id="contactName">Juan Palao García</strong>
+                  <span id="contactPosition">Gerente de Marketing</span><br>
+                  <span id="contactEmail">juan.palao@amitai.com</span><br>
+                  <span id="contactPhone">+52 55 0000 0000</span>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="legal">
+              AMITAI es una marca registrada. Uso bajo licencia HRD Global Solutions Ltd.
+              Material comercial generado desde Brand Center.
+            </div>
+
+          </article>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast">Listo</div>
+
+  <script>
+    let mode = "service";
+
+    const serviceData = {
+      honestidad: {
+        title: "AMITAI Honestidad",
+        color1: "#003f7f",
+        color2: "#2078bd",
+        kicker: "Pre-employment screening",
+        subtitle: "Evaluación para conocer de manera confiable tendencias de candidatos o colaboradores hacia conductas de riesgo.",
+        intro: "AMITAI Honestidad ayuda a fortalecer la toma de decisiones en selección y gestión de talento, identificando tendencias relacionadas con honestidad, cumplimiento de normas, trabajo en equipo y relación con la autoridad.",
+        benefits: [
+          ["Reduce riesgos en contratación", "Detecta señales conductuales relevantes antes de integrar talento."],
+          ["Mejora decisiones de selección", "Aporta información objetiva para complementar entrevistas y filtros internos."],
+          ["Incluye True Identity", "Verificación de identidad y análisis apoyado con inteligencia artificial."],
+          ["Reportes accionables", "Información clara para equipos de RH, cumplimiento y dirección."]
+        ],
+        services: [
+          ["Test de Honestidad AMITAI", "Mide tendencias conductuales vinculadas con honestidad, normas, autoridad y trabajo en equipo."],
+          ["Reporte de Inteligencia Artificial", "Apoya el análisis de resultados y facilita una lectura más ejecutiva."],
+          ["Ranking comparativo", "Permite comparar evaluados y priorizar decisiones."]
+        ]
+      },
+
+      integriline: {
+        title: "Integri-Line",
+        color1: "#5b245c",
+        color2: "#812a80",
+        kicker: "Línea de denuncia",
+        subtitle: "Sistema seguro y configurable para la recepción y gestión de denuncias internas.",
+        intro: "Integri-Line permite documentar, gestionar y dar seguimiento a reportes internos de manera estructurada, confidencial y adaptable a las necesidades de la organización.",
+        benefits: [
+          ["Canal seguro de denuncia", "Facilita la recepción de reportes internos con confidencialidad."],
+          ["Gestión estructurada de casos", "Documenta evidencia y seguimiento de cada denuncia."],
+          ["Flexible por organización", "Configurable según áreas, permisos y procesos internos."],
+          ["Fortalece cumplimiento", "Apoya programas de ética, integridad y prevención de riesgos."]
+        ],
+        services: [
+          ["Recepción de denuncias", "Canales configurables para recibir reportes."],
+          ["Gestión de casos", "Seguimiento, documentación y trazabilidad."],
+          ["Permisos por usuario", "Múltiples contactos y niveles de acceso."]
+        ]
+      },
+
+      background: {
+        title: "Background Check",
+        color1: "#741d1b",
+        color2: "#AF1E35",
+        kicker: "Validación de antecedentes",
+        subtitle: "Reporte automatizado para consultar información socioeconómica, laboral y penal con consentimiento.",
+        intro: "Background Check ayuda a complementar procesos de selección con información relevante del candidato, bajo consentimiento y de forma segura.",
+        benefits: [
+          ["Información en minutos", "Automatiza la consulta y entrega de reportes."],
+          ["Mayor seguridad en selección", "Aporta contexto adicional para reducir riesgos."],
+          ["Proceso documentado", "Permite mantener trazabilidad de la información revisada."],
+          ["Apoyo a cumplimiento", "Refuerza controles previos a la contratación."]
+        ],
+        services: [
+          ["Consulta socioeconómica", "Información contextual del candidato."],
+          ["Validación laboral", "Apoyo en revisión de antecedentes laborales."],
+          ["Validación penal", "Consulta bajo autorización y consentimiento."]
+        ]
+      },
+
+      esurvey: {
+        title: "E-Survey",
+        color1: "#306e1f",
+        color2: "#80AA45",
+        kicker: "Diagnóstico de cultura ética",
+        subtitle: "Encuesta en línea configurable para autodiagnosticar la cultura ética de la organización.",
+        intro: "E-Survey permite levantar información interna de forma estructurada para entender percepciones, riesgos y áreas de oportunidad en cultura ética.",
+        benefits: [
+          ["Diagnóstico organizacional", "Mide percepciones internas de cultura y cumplimiento."],
+          ["Configuración flexible", "Adaptable a los objetivos de cada empresa."],
+          ["Información accionable", "Facilita reportes para dirección y compliance."],
+          ["Mejora continua", "Ayuda a identificar brechas y prioridades."]
+        ],
+        services: [
+          ["Encuesta configurable", "Preguntas adaptadas a necesidades internas."],
+          ["Autodiagnóstico", "Lectura de cultura ética y percepción interna."],
+          ["Resultados ejecutivos", "Reportes para análisis y seguimiento."]
+        ]
+      },
+
+      ethics: {
+        title: "E-thics Learning",
+        color1: "#2e2550",
+        color2: "#54518E",
+        kicker: "Educación en línea",
+        subtitle: "Plataforma de capacitación para fortalecer cultura ética y cumplimiento.",
+        intro: "E-thics Learning ayuda a capacitar equipos en temas de ética, integridad y cumplimiento a través de contenidos en línea.",
+        benefits: [
+          ["Capacitación escalable", "Entrena equipos sin depender de sesiones presenciales."],
+          ["Refuerzo de cultura", "Impulsa hábitos y criterios éticos dentro de la organización."],
+          ["Seguimiento de usuarios", "Permite administrar avances y participación."],
+          ["Apoyo a programas internos", "Complementa iniciativas de compliance y prevención."]
+        ],
+        services: [
+          ["Cursos en línea", "Contenido formativo para usuarios internos."],
+          ["Certificación", "Apoyo a la formalización del aprendizaje."],
+          ["Webinars programados", "Capacitación constante durante la vigencia."]
+        ]
+      },
+
+      perfiles: {
+        title: "Perfiles",
+        color1: "#003f7f",
+        color2: "#00AEEF",
+        kicker: "Evaluación de competencias",
+        subtitle: "Evalúa la adecuación entre el perfil del candidato y el perfil del puesto.",
+        intro: "Perfiles ayuda a optimizar decisiones de selección de personal a partir de competencias, alineación al puesto y criterios definidos por la organización.",
+        benefits: [
+          ["Mejor ajuste al puesto", "Evalúa adecuación entre candidato y rol."],
+          ["Decisiones más objetivas", "Complementa la entrevista con información estructurada."],
+          ["Optimiza selección", "Apoya procesos más consistentes y comparables."],
+          ["Enfoque por competencias", "Aporta información útil para RH y líderes."]
+        ],
+        services: [
+          ["Evaluación de perfiles", "Análisis de adecuación candidato-puesto."],
+          ["Competencias", "Lectura de habilidades y criterios relevantes."],
+          ["Reporte ejecutivo", "Información clara para toma de decisiones."]
+        ]
+      }
+    };
+
+    const solutionData = {
+      prescreening: {
+        title: "Solución Pre-employment Screening",
+        color1: "#003f7f",
+        color2: "#2078bd",
+        kicker: "Suite de selección segura",
+        subtitle: "Integra evaluaciones y verificaciones para reducir riesgos antes de contratar.",
+        intro: "Esta solución combina herramientas clave para fortalecer procesos de selección, mejorar la calidad de contratación y reducir riesgos asociados a candidatos.",
+        benefits: [
+          ["Proceso más robusto", "Integra evaluación, validación y análisis del candidato."],
+          ["Menor exposición al riesgo", "Ayuda a detectar señales antes de la contratación."],
+          ["Decisiones comparables", "Facilita criterios más consistentes entre candidatos."],
+          ["Mayor eficiencia", "Acelera filtros sin perder profundidad de análisis."]
+        ],
+        services: [
+          ["AMITAI Honestidad", "Mide tendencias conductuales relacionadas con honestidad y cumplimiento."],
+          ["Background Check", "Valida información socioeconómica, laboral y penal con consentimiento."],
+          ["Perfiles", "Evalúa adecuación entre candidato y puesto."]
+        ]
+      },
+
+      compliance: {
+        title: "Solución Cultura Ética y Cumplimiento",
+        color1: "#5b245c",
+        color2: "#2078bd",
+        kicker: "Ética organizacional",
+        subtitle: "Fortalece la prevención, detección y formación en temas de ética y cumplimiento.",
+        intro: "Esta solución combina denuncia, diagnóstico y capacitación para consolidar programas internos de integridad, ética y cumplimiento.",
+        benefits: [
+          ["Canaliza reportes internos", "Facilita que colaboradores reporten situaciones de riesgo."],
+          ["Diagnostica cultura", "Mide percepciones internas y áreas de oportunidad."],
+          ["Capacita equipos", "Refuerza criterios éticos y buenas prácticas."],
+          ["Fortalece gobernanza", "Apoya la documentación y seguimiento de acciones."]
+        ],
+        services: [
+          ["Integri-Line", "Sistema para recepción y gestión de denuncias."],
+          ["E-Survey", "Encuesta configurable para autodiagnóstico de cultura ética."],
+          ["E-thics Learning", "Plataforma de educación en línea."]
+        ]
+      },
+
+      suite: {
+        title: "Suite AMITAI",
+        color1: "#003f7f",
+        color2: "#006fb8",
+        kicker: "Solución integral",
+        subtitle: "Ecosistema de soluciones para riesgo, ética, cumplimiento y selección.",
+        intro: "Suite AMITAI reúne herramientas para fortalecer la prevención de riesgos internos, la cultura ética y los procesos de selección en organizaciones de Latinoamérica.",
+        benefits: [
+          ["Ecosistema integral", "Soluciones conectadas para distintas etapas del riesgo organizacional."],
+          ["Más de 25 años", "Experiencia apoyando empresas en ética y cumplimiento."],
+          ["Cobertura regional", "Soluciones utilizadas en múltiples países de habla hispana."],
+          ["Control y trazabilidad", "Herramientas tecnológicas para documentar y gestionar información."]
+        ],
+        services: [
+          ["AMITAI Honestidad", "Evaluación de tendencias conductuales en candidatos y colaboradores."],
+          ["Integri-Line", "Recepción y gestión de denuncias internas."],
+          ["Background Check", "Validación de antecedentes con consentimiento."],
+          ["E-Survey", "Diagnóstico de cultura ética."],
+          ["E-thics Learning", "Capacitación en línea."]
+        ]
+      }
+    };
+
+    function setMode(selectedMode) {
+      mode = selectedMode;
+
+      document.getElementById("btnService").classList.toggle("active", mode === "service");
+      document.getElementById("btnSolution").classList.toggle("active", mode === "solution");
+
+      document.getElementById("serviceField").style.display = mode === "service" ? "block" : "none";
+      document.getElementById("solutionField").style.display = mode === "solution" ? "block" : "none";
+
+      updateSheet();
+    }
+
+    function getCurrentData() {
+      if (mode === "service") {
+        return serviceData[document.getElementById("serviceSelect").value];
+      }
+
+      return solutionData[document.getElementById("solutionSelect").value];
+    }
+
+    function updateSheet() {
+      const data = getCurrentData();
+
+      const prospect = document.getElementById("prospect").value;
+      const objective = document.getElementById("objective").value;
+      const customMessage = document.getElementById("customMessage").value;
+
+      const sellerName = document.getElementById("sellerName").value;
+      const sellerPosition = document.getElementById("sellerPosition").value;
+      const sellerEmail = document.getElementById("sellerEmail").value;
+      const sellerPhone = document.getElementById("sellerPhone").value;
+
+      document.getElementById("sheetHero").style.background =
+        `linear-gradient(135deg, ${data.color1} 0%, ${data.color2} 75%)`;
+
+      document.getElementById("kicker").textContent = data.kicker;
+      document.getElementById("sheetTitle").textContent = data.title;
+      document.getElementById("sheetSubtitle").textContent = data.subtitle;
+
+      const objectiveText = {
+        primer: "Como primer acercamiento,",
+        seguimiento: "Como seguimiento a nuestra conversación,",
+        cierre: "Para avanzar hacia una propuesta concreta,"
+      };
+
+      document.getElementById("introText").textContent =
+        `${objectiveText[objective]} compartimos esta ficha para ${prospect}. ${customMessage} ${data.intro}`;
+
+      document.getElementById("benefits").innerHTML = data.benefits.map(item => `
+        <div class="benefit">
+          <strong>${item[0]}</strong>
+          <span>${item[1]}</span>
+        </div>
+      `).join("");
+
+      document.getElementById("servicesList").innerHTML = data.services.map(item => `
+        <div class="service-item">
+          <div class="dot" style="background:${data.color2};"></div>
+          <div>
+            <h4>${item[0]}</h4>
+            <p>${item[1]}</p>
+          </div>
+        </div>
+      `).join("");
+
+      document.getElementById("ctaText").textContent =
+        `Podemos revisar el caso de ${prospect} y proponer una ruta de implementación alineada a sus necesidades.`;
+
+      document.getElementById("contactName").textContent = sellerName;
+      document.getElementById("contactPosition").textContent = sellerPosition;
+      document.getElementById("contactEmail").textContent = sellerEmail;
+      document.getElementById("contactPhone").textContent = sellerPhone;
+
+      saveData();
+    }
+
+    function printPDF() {
+      window.print();
+    }
+
+    function copyLink() {
+      const params = new URLSearchParams();
+
+      params.set("mode", mode);
+
+      if (mode === "service") {
+        params.set("service", document.getElementById("serviceSelect").value);
+      } else {
+        params.set("solution", document.getElementById("solutionSelect").value);
+      }
+
+      const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+
+      navigator.clipboard.writeText(url);
+      showToast("Link copiado");
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1800);
+    }
+
+    function saveData() {
+      const data = {
+        mode,
+        service: document.getElementById("serviceSelect").value,
+        solution: document.getElementById("solutionSelect").value,
+        prospect: document.getElementById("prospect").value,
+        objective: document.getElementById("objective").value,
+        customMessage: document.getElementById("customMessage").value,
+        sellerName: document.getElementById("sellerName").value,
+        sellerPosition: document.getElementById("sellerPosition").value,
+        sellerEmail: document.getElementById("sellerEmail").value,
+        sellerPhone: document.getElementById("sellerPhone").value
+      };
+
+      localStorage.setItem("salesSheetData", JSON.stringify(data));
+    }
+
+    function loadData() {
+      const saved = localStorage.getItem("salesSheetData");
+      const params = new URLSearchParams(window.location.search);
+
+      if (saved) {
+        const data = JSON.parse(saved);
+
+        if (data.service) document.getElementById("serviceSelect").value = data.service;
+        if (data.solution) document.getElementById("solutionSelect").value = data.solution;
+        if (data.prospect) document.getElementById("prospect").value = data.prospect;
+        if (data.objective) document.getElementById("objective").value = data.objective;
+        if (data.customMessage) document.getElementById("customMessage").value = data.customMessage;
+        if (data.sellerName) document.getElementById("sellerName").value = data.sellerName;
+        if (data.sellerPosition) document.getElementById("sellerPosition").value = data.sellerPosition;
+        if (data.sellerEmail) document.getElementById("sellerEmail").value = data.sellerEmail;
+        if (data.sellerPhone) document.getElementById("sellerPhone").value = data.sellerPhone;
+
+        if (data.mode) mode = data.mode;
+      }
+
+      if (params.get("mode")) mode = params.get("mode");
+      if (params.get("service")) document.getElementById("serviceSelect").value = params.get("service");
+      if (params.get("solution")) document.getElementById("solutionSelect").value = params.get("solution");
+
+      setMode(mode);
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
