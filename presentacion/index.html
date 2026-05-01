@@ -476,51 +476,6 @@
         grid-template-columns: 1fr;
       }
     }
-
-    @media print {
-      body {
-        background: #ffffff;
-      }
-
-      .top-link,
-      .header,
-      .panel,
-      .toast {
-        display: none !important;
-      }
-
-      .page {
-        padding: 0;
-      }
-
-      .container {
-        max-width: none;
-      }
-
-      .app-grid {
-        display: block;
-      }
-
-      .preview-wrap {
-        padding: 0;
-        background: #ffffff;
-        border: none;
-        overflow: visible;
-      }
-
-      .deck {
-        display: block;
-      }
-
-      .slide {
-        width: 100vw;
-        height: 56.25vw;
-        max-height: 100vh;
-        page-break-after: always;
-        border-radius: 0;
-        box-shadow: none;
-      }
-    }
   </style>
 </head>
 
@@ -578,7 +533,7 @@
           <input id="sellerPhone" value="+52 55 0000 0000" oninput="updateDeck()" />
 
           <div class="button-row">
-            <button class="primary" onclick="window.print()">Exportar PDF</button>
+            <button class="primary" onclick="generatePDF()">Exportar PDF</button>
             <button class="secondary" onclick="copyDeckLink()">Copiar link</button>
           </div>
         </aside>
@@ -592,6 +547,9 @@
   </main>
 
   <div id="toast" class="toast">Listo</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
     const logoUrl = "https://amitaisignaturegenerator.netlify.app/media/logo-amitai.png";
@@ -895,6 +853,44 @@
 
       document.getElementById("deck").innerHTML = slides.join("");
       saveDeckData();
+    }
+
+    async function generatePDF() {
+      showToast("Generando PDF...");
+
+      const { jsPDF } = window.jspdf;
+      const slides = document.querySelectorAll(".slide");
+
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [960, 540]
+      });
+
+      for (let i = 0; i < slides.length; i++) {
+        const canvas = await html2canvas(slides[i], {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff"
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+
+        if (i > 0) {
+          pdf.addPage([960, 540], "landscape");
+        }
+
+        pdf.addImage(imgData, "PNG", 0, 0, 960, 540);
+      }
+
+      const type = document.getElementById("deckType").value;
+      const prospect = document.getElementById("prospect").value
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9áéíóúñ-]/gi, "");
+
+      pdf.save(`presentacion-${type}-${prospect || "amitai"}.pdf`);
+      showToast("PDF descargado");
     }
 
     function saveDeckData() {
